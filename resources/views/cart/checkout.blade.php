@@ -1,28 +1,31 @@
 @extends('layouts.app')
 @section('title', 'Checkout')
 @section('content')
-<h3 class="mb-3">Checkout</h3>
-<div class="row">
+<h3 class="ac-section-title mb-3"><i class="bi bi-bag-check me-2 text-success"></i>Checkout</h3>
+<div class="row g-4">
     <div class="col-md-7">
-        <div class="card shadow-sm mb-3">
+        <div class="card mb-3">
             <div class="card-body">
-                <h6>Order Summary</h6>
+                <h6 class="fw-bold mb-3">Order Summary</h6>
                 <ul class="list-group list-group-flush">
                     @foreach($items as $item)
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ $item['product']->name }} × {{ $item['quantity'] }}</span>
-                            <span>₱{{ number_format($item['subtotal'], 2) }}</span>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="d-flex align-items-center gap-2">
+                                <img src="{{ $item['product']->display_image }}" class="rounded-3" style="width:36px;height:36px;object-fit:cover;" alt="">
+                                {{ $item['product']->name }} × {{ $item['quantity'] }}
+                            </span>
+                            <span class="fw-semibold">₱{{ number_format($item['subtotal'], 2) }}</span>
                         </li>
                     @endforeach
-                    <li class="list-group-item d-flex justify-content-between fw-bold">
-                        <span>Total</span><span>₱{{ number_format($total, 2) }}</span>
+                    <li class="list-group-item d-flex justify-content-between fw-bold px-0 pt-3">
+                        <span>Total</span><span class="ac-price">₱{{ number_format($total, 2) }}</span>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="col-md-5">
-        <div class="card shadow-sm">
+        <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ route('checkout.store') }}">
                     @csrf
@@ -46,7 +49,7 @@
                         <label class="form-label">Reference Number</label>
                         <input type="text" name="reference_no" class="form-control" value="{{ old('reference_no') }}">
                     </div>
-                    <button class="btn btn-success w-100">Place Order</button>
+                    <button class="btn btn-success w-100 py-2">Place Order</button>
                 </form>
             </div>
         </div>

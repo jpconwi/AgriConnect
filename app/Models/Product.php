@@ -32,4 +32,31 @@ class Product extends Model
     {
         return $query->where('status', 'approved');
     }
+
+    /**
+     * Resolve a usable image URL whether the product has a locally
+     * uploaded file (stored on the public disk) or an external URL
+     * (e.g. from seeded/demo data).
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        return asset('storage/'.$this->image);
+    }
+
+    /**
+     * A deterministic, thematically-relevant placeholder image so
+     * empty-state "No image" boxes are never shown for demo data.
+     */
+    public function getDisplayImageAttribute(): string
+    {
+        return $this->image_url ?? 'https://loremflickr.com/640/480/agriculture,farm?lock='.$this->id;
+    }
 }

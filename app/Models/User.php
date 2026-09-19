@@ -81,4 +81,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'buyer_id');
     }
+
+    /**
+     * A generated avatar (initials on a colored background) so every
+     * account has a picture without needing real uploaded photos.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        $colors = [
+            'admin' => '2e7d32',
+            'farmer' => '6d4c1e',
+            'supplier' => '1565c0',
+            'buyer' => 'ef6c00',
+        ];
+
+        $bg = $colors[$this->role] ?? '2e7d32';
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name)
+            .'&background='.$bg.'&color=fff&bold=true&size=128';
+    }
 }

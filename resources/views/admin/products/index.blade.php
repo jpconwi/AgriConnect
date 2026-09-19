@@ -1,24 +1,31 @@
 @extends('layouts.app')
 @section('title', 'Manage Listings')
 @section('content')
-<h3 class="mb-3">Manage Listings</h3>
-<form method="GET" class="row g-2 mb-3">
-    <div class="col-md-3">
-        <select name="status" class="form-select" onchange="this.form.submit()">
-            <option value="">All statuses</option>
-            @foreach(['pending','approved','rejected','out_of_stock'] as $s)
-                <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ ucfirst(str_replace('_',' ',$s)) }}</option>
-            @endforeach
-        </select>
+<h3 class="ac-section-title mb-3"><i class="bi bi-clipboard-check me-2 text-success"></i>Manage Listings</h3>
+<form method="GET" class="ac-filter-bar">
+    <div class="row g-2">
+        <div class="col-md-3">
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="">All statuses</option>
+                @foreach(['pending','approved','rejected','out_of_stock'] as $s)
+                    <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ ucfirst(str_replace('_',' ',$s)) }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 </form>
 <div class="table-responsive">
-<table class="table bg-white shadow-sm align-middle">
+<table class="table align-middle">
     <thead><tr><th>Product</th><th>Seller</th><th>Category</th><th>Price</th><th>Status</th><th></th></tr></thead>
     <tbody>
     @forelse($products as $product)
         <tr>
-            <td>{{ $product->name }}</td>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <img src="{{ $product->display_image }}" class="rounded-3" style="width:40px;height:40px;object-fit:cover;" alt="">
+                    <span class="fw-semibold">{{ $product->name }}</span>
+                </div>
+            </td>
             <td>{{ $product->seller->name }} ({{ ucfirst($product->seller->role) }})</td>
             <td>{{ $product->category->name }}</td>
             <td>₱{{ number_format($product->price, 2) }}</td>
@@ -44,10 +51,10 @@
             </td>
         </tr>
     @empty
-        <tr><td colspan="6" class="text-center text-muted py-4">No listings found.</td></tr>
+        <tr><td colspan="6"><div class="ac-empty"><i class="bi bi-clipboard-x ac-empty-icon"></i><p class="mb-0">No listings found.</p></div></td></tr>
     @endforelse
     </tbody>
 </table>
 </div>
-{{ $products->links() }}
+<div class="mt-3">{{ $products->links() }}</div>
 @endsection
